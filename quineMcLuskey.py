@@ -3,6 +3,9 @@ minterms = [0, 1, 2, 4, 6, 8, 9, 11, 13, 15]
 def boolToBin(boolList):
     return ''.join(['-' if bit is None else str(int(bit)) for bit in boolList])
 
+def SOPTerm(binBools, terms = ['A', 'B', 'C', 'D']):
+    return ''.join([f"{var}{"'" if not bit else ''}" for var, bit in zip(terms, binBools) if bit is not None])
+
 def printColumn(column):
     for i in range(len(column)):
         if column[i]:
@@ -38,15 +41,19 @@ def quineMcLuskey(decMinterms):
         else:
             columns.append(columnTemp)
 
+    primeImplicants = set([i for i in dictName if not dictName[i]])
+
     for columnI in range(len(columns)):
-        print(f"Column {columnI+1}:")
-        print()
+        print(f"Column {columnI+1}\n")
         printColumn(columns[columnI])
         print("\n")
-    print(dictName)
 
-    primeImplicants = set([i for i in dictName if not dictName[i]])
+    print("Prime Implicants:\n")
     for i in primeImplicants:
         print(boolToBin(i))
+    print("\n")
+
+    print(f"F = {' + '.join([SOPTerm(i) for i in primeImplicants])}")
+    
 
 quineMcLuskey(minterms)
