@@ -14,11 +14,11 @@ def compare(x, y):
     return sum([a != b for a, b in zip(x, y)]) == 1 and all([(a == None) == (b == None) for a, b in zip(x, y)])
 
 def combine(x, y):
-    return [a if a==b else None for a, b in zip(x, y)]
+    return tuple([a if a == b else None for a, b in zip(x, y)])
 
 def quineMcLuskey(decMinterms):
-    binMinterms = [[bool(j == '1') for j in bin(i)[2:].rjust(4, '0')] for i in decMinterms]
-    dictName = {tuple(i):False for i in binMinterms}
+    binMinterms = [tuple([bool(j == '1') for j in bin(i)[2:].rjust(4, '0')]) for i in decMinterms]
+    dictName = {i:False for i in binMinterms}
     column1 = [[j for j in binMinterms if sum(j) == i] for i in range(5)]
 
     columns = [column1]
@@ -30,8 +30,8 @@ def quineMcLuskey(decMinterms):
                 for k in columns[-1][i]:
                     if compare(j,k):
                         column2Temp.append(combine(j,k))
-                        dictName[tuple(j)], dictName[tuple(k)] = True, True
-                        dictName[tuple(combine(j,k))] = False
+                        dictName[j], dictName[k] = True, True
+                        dictName[combine(j,k)] = False
             columnTemp.append(column2Temp)
         if not any(columnTemp):
             break
@@ -45,7 +45,7 @@ def quineMcLuskey(decMinterms):
         print("\n")
     print(dictName)
 
-    primeImplicants = set([i for i in dictName if not dictName[i]] + sum(columns[-1], []))
+    primeImplicants = set([i for i in dictName if not dictName[i]])
     for i in primeImplicants:
         print(boolToBin(i))
 
