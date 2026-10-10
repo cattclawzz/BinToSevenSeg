@@ -3,7 +3,7 @@ minterms = [0, 1, 2, 4, 6, 8, 9, 11, 13, 15]
 def boolToBin(boolList):
     return ''.join(['-' if bit is None else str(int(bit)) for bit in boolList])
 
-def SOPTerm(binBools, terms = ['A', 'B', 'C', 'D']):
+def SOPTerm(binBools, terms):
     return ''.join([f"{var}{"'" if not bit else ''}" for var, bit in zip(terms, binBools) if bit is not None])
 
 def printColumn(column):
@@ -19,7 +19,7 @@ def compare(x, y):
 def combine(x, y):
     return tuple([a if a == b else None for a, b in zip(x, y)])
 
-def quineMcLuskey(decMinterms):
+def quineMcLuskey(decMinterms, terms = ['A', 'B', 'C', 'D']):
     binMinterms = [tuple([bool(j == '1') for j in bin(i)[2:].rjust(4, '0')]) for i in decMinterms]
     dictName = {i:False for i in binMinterms}
     column1 = [[j for j in binMinterms if sum(j) == i] for i in range(5)]
@@ -53,7 +53,7 @@ def quineMcLuskey(decMinterms):
         print(boolToBin(i))
     print("\n")
 
-    print(f"F = {' + '.join([SOPTerm(i) for i in primeImplicants])}")
+    print(f"F = {' + '.join([SOPTerm(i, terms) for i in primeImplicants])}")
     
 
-quineMcLuskey(minterms)
+quineMcLuskey([0, 1, 2, 3, 4, 7, 8, 9, 10, 13], terms = ['P', 'Q', 'R', 'S'])
